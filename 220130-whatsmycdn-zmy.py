@@ -73,7 +73,7 @@ for i in range(10000, 20000):
 # # CDN finder
 def initiate(domain):
     url = "https://api.cdnplanet.com/tools/cdnfinder?lookup=website"
-    Headers = {"content-type": "application/json","Cdnplanet-Key":"4844a1b8-8d7a-4eb3-b533-8e47078aad76"}
+    Headers = {"content-type": "application/json","Cdnplanet-Key":xxxxx}       #insert yout api-key
     data = {"query": "https://" + domain}
     response = requests.post(url=url,headers=Headers,json=data)
     return json.loads(response.text)['id']
