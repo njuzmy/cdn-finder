@@ -1,60 +1,14 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
 import requests
-
-
-# In[2]:
-
-
 from bs4 import BeautifulSoup
-
-
-# In[3]:
-
-
 import json
 import pandas as pd
-
-
-# In[27]:
-
-
 import time
 
 
 # # whatsmycdn
-
-# In[ ]:
-
-
-current_page = "https://www.whatsmycdn.com/?uri=www.baidu.com&location=GL"
-
-
-# In[ ]:
-
-
-page = requests.get(current_page)
-
-
-# In[ ]:
-
-
-soup = BeautifulSoup(page.text)
-
-
-# In[ ]:
-
-
-items = soup.find_all(attrs={'class':'six columns', "style":"margin-left: 2px; word-wrap:break-word;"})
-
-
-# In[ ]:
-
-
 def whatscdn(domain):
     print(domain)
     current_page = "https://www.whatsmycdn.com/?uri=%s&location=GL" % domain
@@ -62,15 +16,11 @@ def whatscdn(domain):
     soup = BeautifulSoup(page.text)
     items = soup.find_all(attrs={'class':'six columns', "style":"margin-left: 2px; word-wrap:break-word;"})
     for item in items:
-        if "edgecast" in item.get_text().lower():
+        if "edgecast" in item.get_text().lower():   #change edgecast to other cdn company
             return 'e'
         elif item.get_text().lower() == 'incapsula':
             return 'i'
     return 'n'
-
-
-# In[ ]:
-
 
 def isCDN(cdn_name, domain):
     print(domain)
@@ -88,23 +38,8 @@ def isCDN(cdn_name, domain):
         print(e)
         return False
 
-
-# In[ ]:
-
-
 domain_df = pd.read_csv("../anycast/pingpoints/top-1m.csv")
-for i in range(15968, 20000):
-#     res = whatscdn(domain_df["domain"][i])
-#     if res == 'e':
-#         with open('e1.txt', mode='a') as filename:
-#             filename.write(domain_df["domain"][i])
-#             filename.write('\n')
-#         print('e')
-#     elif res == 'i':
-#         with open('i1.txt', mode='a') as filename:
-#             filename.write(domain_df["domain"][i])
-#             filename.write('\n')
-#         print('i')
+for i in range(0, 100000):
     res1 = whatscdn("www."+ domain_df["domain"][i])
     if res1 == 'e':
         with open('e1.txt', mode='a') as filename:
@@ -117,10 +52,7 @@ for i in range(15968, 20000):
             filename.write('\n')
         print('i')
 
-
-# In[ ]:
-
-
+# another function to use whatsmycdn api
 session = HTMLSession()
 domain_df = pandas.read_csv('../anycast/pingpoints/top-1m.csv"')
 for i in range(10000, 20000):
@@ -139,20 +71,12 @@ for i in range(10000, 20000):
 
 
 # # CDN finder
-
-# In[4]:
-
-
 def initiate(domain):
     url = "https://api.cdnplanet.com/tools/cdnfinder?lookup=website"
     Headers = {"content-type": "application/json","Cdnplanet-Key":"4844a1b8-8d7a-4eb3-b533-8e47078aad76"}
     data = {"query": "https://" + domain}
     response = requests.post(url=url,headers=Headers,json=data)
     return json.loads(response.text)['id']
-
-
-# In[29]:
-
 
 def lookup(findid):
     url = "https://api.cdnplanet.com/tools/results?service=cdnfinder&id=" + findid
@@ -168,10 +92,6 @@ def lookup(findid):
         else:
             return None
 
-
-# In[30]:
-
-
 def whatcdn(results):
     for dic in results:
         if dic['cdn'].lower() =='edgecast':
@@ -179,10 +99,6 @@ def whatcdn(results):
         elif dic['cdn'].lower() =='incapsula':
             return 'i'
     return 'n'
-
-
-# In[ ]:
-
 
 domain_df = pd.read_csv('../anycast/pingpoints/top-1m.csv')
 for i in range(0,20000):
@@ -200,10 +116,3 @@ for i in range(0,20000):
                 filename.write("www."+ domain_df["domain"][i])
                 filename.write('\n')
             print('i')
-
-
-# In[ ]:
-
-
-
-
